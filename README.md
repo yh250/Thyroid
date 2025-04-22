@@ -9,9 +9,10 @@ This repository is a compilation of project work related to thyroid-related dise
 ### [1. Data Augmentation and Balancing of a Highly Imbalanced SPECT Scan Dataset][1]  
 *Minor Project Submission by Harsh Yadav, Vinay Dagar (M.Sc. 2025)*
 
-First steps towards a deep learning-based diagnostic approach for hyperthyroidism using SPECT scans.  
-This project focuses on solving class imbalance in small-scale medical datasets through traditional, hybrid (STEM), GAN, and diffusion-based augmentation techniques.  
-All these augmentation techniques are evaluated on Models like CNN, AlexNet, MobileNetV2, and ResNet50V2 using various performance metrics such as ROC-AUC curves, Precision, F1-score, etc.
+A deep learning-based diagnostic approach for hyperthyroidism using SPECT scans.  
+This project tackles class imbalance in small-scale medical datasets using traditional methods, hybrid augmentation (**STEM**: SMOTE + ENN + MixUp), GANs, and diffusion-based techniques.  
+All methods were evaluated across multiple models (CNN, AlexNet, MobileNetV2, ResNet50V2) using metrics like ROC-AUC, Precision, F1-score, and more.
+
 
 
 ---
