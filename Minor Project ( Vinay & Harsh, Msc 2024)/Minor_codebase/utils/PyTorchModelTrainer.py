@@ -1,3 +1,6 @@
+"""
+Trainer function for the alternate PYTORCH framework 
+"""
 import torch
 import torch.nn as nn
 import torch.optim as optim
