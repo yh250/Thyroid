@@ -1,3 +1,9 @@
+"""
+Functions to create and define the directory for logs and results, 
+
+Saved parameters include: training logs, loss curve, and model checkpoints 
+    
+"""
 import os
 from datetime import datetime
 import matplotlib.pyplot as plt
