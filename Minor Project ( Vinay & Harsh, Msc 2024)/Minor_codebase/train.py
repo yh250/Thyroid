@@ -1,9 +1,13 @@
+"""
+Importing functions from all other files, cross-reference your directory structure and function names for any changes.
+""""
 from Models.Resnet.build_resnet_18 import build_resnet18
 from Models.AlexNet.build_alexnet import build_alexnet
 from Models.MobileNet.build_mobilenet_v2 import build_mobilenet
 from Models.simple_cnn.build_simple_cnn import build_simple_cnn
 from utils.save_results import create_results_folder, save_training_logs, save_loss_curve, save_model_checkpoint
 from Augmentation.Data_loader import *
+# Importing Libraries here 
 import tensorflow as tf
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import numpy as np
@@ -16,7 +20,13 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
 def main():
-    # Configuration
+    """ Configuration
+    Parameters: 
+    input_shape = resolution of images and their colour channels 
+    num_classes = number of classes 
+    model_name = name of the model used in the current training cycle for logging purposes 
+    augmentation_type = Name of the dataset/Augmentation type used in the current training cycle for logging purposes 
+    """
     input_shape = (256, 256, 1)
     num_classes = 4
     #model_name = "Simple_CNN"
@@ -61,10 +71,17 @@ def main():
     # Example usage
     print_generator_info(train_generator)
 
-    # Callbacks for early stopping and best model saving
+    """
+    Callbacks for early stopping and best model saving
+    Parameters: 
+    monitor = which performance metric to keep track of  for early stopping of training 
+    patience = Number of epochs for which we wait for any improvement in the monitor 
+    NOTE: We only save model checkpoints in .keras format due to space constraints and storage efficiency. The 
+    user may utilise their preferred way of storing the best model
+    """
     early_stopping = EarlyStopping(
         monitor='val_loss',  # Monitor validation loss
-        patience=5,  # Stop after 5 epochs of no improvement
+        patience=5,  # Stop after N epochs of no improvement
         restore_best_weights=True  # Restore the best weights after stopping
     )
 
@@ -76,7 +93,11 @@ def main():
         verbose=1
     )
 
-    # Build and train the model
+    """
+    Build and train the model:
+    Call the build function for the intended model architecture, for example, calling build_simple_cnn to use and train the 3-layer CNN. 
+    Or call build_resnet18 to call the resnet model, which is stored in separate files that NEED TO BE RUN before calling the said model
+    """
    #model = build_simple_cnn(input_shape, num_classes)
     model = build_resnet18(input_shape, num_classes)
     with tf.device('/GPU:0'):
@@ -95,13 +116,16 @@ def main():
         "loss": history.history['loss'][-1],
         "val_loss": history.history['val_loss'][-1]
     }
-    # Save results
+    # Save results using functions in save_results
     save_training_logs(results_folder, metrics_to_log)
     save_loss_curve(results_folder, history)
     save_model_checkpoint(results_folder, model)
-#ploting confusion matrix and other metrics and aoc curve
+    
+""" 
+Plotting and saving the confusion matrix, ROC curve and Classfication Report
+"""
 
-    # Get predictions for confusion matrix and ROC curve
+    # Get predictions for the confusion matrix and ROC curve
     y_true = test_generator.classes
     y_pred_prob = model.predict(test_generator)
     y_pred = np.argmax(y_pred_prob, axis=1)
@@ -112,6 +136,9 @@ def main():
     cm_plot.savefig(os.path.join(results_folder, "confusion_matrix.png"))
 
     # Classification Report
+""" 
+Creates and saves a JSON file containing the classification report (Precision, Recall, etc), takes class labels from train_generator's indices
+"""
     class_report = classification_report(y_true, y_pred, target_names=list(train_generator.class_indices.keys()),
                                          output_dict=True)
     with open(os.path.join(results_folder, "classification_report.json"), "w") as f:
