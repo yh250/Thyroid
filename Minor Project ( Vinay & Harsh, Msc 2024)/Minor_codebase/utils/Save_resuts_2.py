@@ -1,3 +1,6 @@
+"""
+Create the Result folder only. NO LOGING  
+"""
 import os
 from datetime import datetime
 
