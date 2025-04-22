@@ -1,3 +1,5 @@
+# This file is used to do a test run on save_results file to check for faults and bugs in folder creation and result logging 
+
 from utils.save_results import create_results_folder, save_training_logs, save_loss_curve, save_model_checkpoint
 import tensorflow as tf
 import numpy as np
