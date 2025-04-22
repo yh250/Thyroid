@@ -3,7 +3,7 @@ from Models.AlexNet.build_alexnet import build_alexnet
 from Models.MobileNet.build_mobilenet_v2 import build_mobilenet
 from Models.simple_cnn.build_simple_cnn import build_simple_cnn
 from utils.save_results import create_results_folder, save_training_logs, save_loss_curve, save_model_checkpoint
-from Augmentation.Simple_aug import *
+from Augmentation.Data_loader import *
 import tensorflow as tf
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import numpy as np
