@@ -1,5 +1,5 @@
 """
-Create the Result folder only. NO LOGING  
+Create the Result folder only. NO LOGGING  
 """
 import os
 from datetime import datetime
