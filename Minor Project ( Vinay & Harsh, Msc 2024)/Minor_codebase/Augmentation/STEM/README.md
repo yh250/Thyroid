@@ -11,6 +11,14 @@ STEMBalancer is a Python-based image dataset balancing tool that integrates SMOT
 - **Intermediate and final results saving** to visualize and verify the augmentation impact.
 
 ---
+## Requirements
+- Python 3.x
+- NumPy
+- OpenCV
+- Pandas
+- scikit-learn
+
+---
 
 ##  How It Works
 
@@ -66,5 +74,16 @@ project_root/
     ├── final_balanced/
     └── balance_summary.txt
 ```
+---
+## Output 
+- Augmented image files in ```balanced_output/```
+
+- Summary statistics in balance_summary.txt
+
+- Print logs for:
+   - Class distribution before/after each step
+   - Iteration progress
+   - Improvements in balancing ratio
+---
 
 
