@@ -121,10 +121,9 @@ def main():
     save_loss_curve(results_folder, history)
     save_model_checkpoint(results_folder, model)
     
-""" 
-Plotting and saving the confusion matrix, ROC curve and Classfication Report
-"""
-
+    """ 
+    Plotting and saving the confusion matrix, ROC curve and Classfication Report
+    """
     # Get predictions for the confusion matrix and ROC curve
     y_true = test_generator.classes
     y_pred_prob = model.predict(test_generator)
@@ -136,9 +135,9 @@ Plotting and saving the confusion matrix, ROC curve and Classfication Report
     cm_plot.savefig(os.path.join(results_folder, "confusion_matrix.png"))
 
     # Classification Report
-""" 
-Creates and saves a JSON file containing the classification report (Precision, Recall, etc), takes class labels from train_generator's indices
-"""
+    """ 
+    Creates and saves a JSON file containing the classification report (Precision, Recall, etc), takes class labels from train_generator's indices
+    """
     class_report = classification_report(y_true, y_pred, target_names=list(train_generator.class_indices.keys()),
                                          output_dict=True)
     with open(os.path.join(results_folder, "classification_report.json"), "w") as f:
