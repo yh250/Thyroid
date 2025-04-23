@@ -1,8 +1,6 @@
 # GANs: Generative Adversarial Networks for Thyroid Image Augmentation
 
-This folder contains two GAN architectures used for data augmentation on a thyroid SPECT scan dataset: **DCGAN** and **ACGAN**. These models help generate synthetic medical images to combat data imbalance in rare hyperthyroid conditions.
-
----
+This folder contains two GAN architectures used for data augmentation on a thyroid SPECT scan dataset: **DCGAN** and **ACGAN**. These models help generate synthetic images to combat data imbalance.
 
 ## 📁 Files
 
@@ -15,7 +13,7 @@ This folder contains two GAN architectures used for data augmentation on a thyro
 
 ##  Objective
 
-This module focuses on synthetically increasing the size of the dataset using GANs to aid in balanced classification. Both models are used to generate realistic thyroid SPECT scans, helping improve generalization and reduce overfitting in the downstream classifier.
+This module focuses on synthetically increasing the size of the dataset using GANs to aid in balanced classification. Both models are used to generate thyroid SPECT scans, helping improve generalization and reduce overfitting in the downstream classifier.
 
 ---
 
@@ -43,7 +41,11 @@ This module focuses on synthetically increasing the size of the dataset using GA
 ## 📦Requirements
 
 Ensure the following libraries are installed before running the notebooks:
-- ```numpy``` - ```matplotlib``` - ```pandas``` - ```scikit-learn``` - ```tensorflow keras```
+- ```numpy```
+- ```matplotlib```
+- ```pandas```
+- ```scikit-learn```
+- ```tensorflow keras```
 
 ```bash
 pip install numpy matplotlib pandas scikit-learn tensorflow keras
@@ -69,3 +71,5 @@ jupyter notebook ACGAN.ipynb
 3. Run all cells sequentially after ensuring dataset paths are correct.
 
 ---
+[1]: https://github.com/yh250/Thyroid/blob/c55f8f8a3be1734681f94657dd0fa3e4159f02e0/Minor%20Project%20(%20Vinay%20%26%20Harsh%2C%20Msc%202024)/Minor_codebase/Augmentation/GANs/DCGAN.ipynb
+[2]: https://github.com/yh250/Thyroid/blob/c55f8f8a3be1734681f94657dd0fa3e4159f02e0/Minor%20Project%20(%20Vinay%20%26%20Harsh%2C%20Msc%202024)/Minor_codebase/Augmentation/GANs/ACGAN.ipynb
