@@ -106,3 +106,24 @@ Each class folder should contain .png, .jpg, or other supported images for condi
 
 - Make sure you have enough VRAM (≥6GB) to run Stable Diffusion with conditioning.
 ---
+##  Output
+After running the script:
+
+A new directory named ```enhanced_dataset/``` is created (or updated).
+
+Inside it, you’ll find subfolders for each class:
+
+```enhanced_dataset/graves/```
+
+```enhanced_dataset/thyroiditis/```
+
+```enhanced_dataset/MHG/```
+
+```enhanced_dataset/AFTN/```
+
+Each subfolder contains synthetically generated grayscale thyroid scan images named like:
+
+```python-repl
+graves_gen_0.png
+graves_gen_1.png
+```
