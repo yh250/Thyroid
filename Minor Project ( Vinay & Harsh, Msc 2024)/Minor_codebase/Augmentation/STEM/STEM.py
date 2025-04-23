@@ -1,4 +1,3 @@
-
 import os
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
@@ -8,8 +7,22 @@ from pathlib import Path
 import cv2
 
 class STEMBalancer:
+    """
+    A class that implements the STEM balancing algorithm which combines 
+    SMOTE-ENN and Mixup techniques to address class imbalance in image datasets.
+    """
 
     def __init__(self, target_ratio=0.7, k_neighbors=5, max_iterations=30, min_improvement=5, image_size=(256, 256)):
+        """
+        Initialize the STEMBalancer with configuration parameters.
+
+        Parameters:
+        - target_ratio (float): Desired ratio of minority to majority class.
+        - k_neighbors (int): Number of neighbors used in SMOTE.
+        - max_iterations (int): Maximum iterations for SMOTE-ENN.
+        - min_improvement (int): Minimum number of samples added per iteration to continue.
+        - image_size (tuple): Image dimensions for resizing.
+        """
         self.target_ratio = target_ratio
         self.k_neighbors = k_neighbors
         self.max_iterations = max_iterations
@@ -17,7 +30,16 @@ class STEMBalancer:
         self.image_size = image_size
 
     def load_data_from_folders(self, base_path):
-        """Load and preprocess images from folders"""
+        """
+        Load and preprocess grayscale images from class-wise directories.
+
+        Parameters:
+        - base_path (str): Path to the root directory containing class folders.
+
+        Returns:
+        - X (np.ndarray): Flattened and normalized image data.
+        - y (np.ndarray): Corresponding class labels.
+        """
         X = []
         y = []
         print("Loading data from folders...")
@@ -32,12 +54,9 @@ class STEMBalancer:
                     if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
                         file_path = os.path.join(folder_path, file_name)
                         try:
-                            # Read image
                             img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
                             if img is not None:
-                                # Resize image to standard size
                                 img_resized = cv2.resize(img, self.image_size, interpolation=cv2.INTER_AREA)
-                                # Flatten and normalize
                                 img_flat = img_resized.flatten().astype(np.float32) / 255.0
                                 X.append(img_flat)
                                 y.append(class_idx)
@@ -61,14 +80,32 @@ class STEMBalancer:
         return X, y
 
     def calculate_imbalance_ratio(self, y):
-        """Calculate imbalance ratio (minority:majority)"""
+        """
+        Calculate the class imbalance ratio (minority/majority).
+
+        Parameters:
+        - y (np.ndarray): Class labels.
+
+        Returns:
+        - ratio (float): Calculated imbalance ratio.
+        """
         class_counts = Counter(y)
         min_class = min(class_counts.values())
         max_class = max(class_counts.values())
         return min_class / max_class if max_class > 0 else 0
 
     def apply_smote_enn(self, X, y):
-        """Apply SMOTE-ENN with iteration control and progress tracking"""
+        """
+        Perform SMOTE followed by ENN to balance the dataset iteratively.
+
+        Parameters:
+        - X (np.ndarray): Feature matrix.
+        - y (np.ndarray): Class labels.
+
+        Returns:
+        - X_current (np.ndarray): Balanced feature matrix.
+        - y_current (np.ndarray): Balanced labels.
+        """
         class_counts = Counter(y)
         max_class_count = max(class_counts.values())
         X_current, y_current = X.copy(), y.copy()
@@ -85,11 +122,10 @@ class STEMBalancer:
             X_new, y_new = [], []
             samples_added = 0
 
-            # SMOTE part
             for class_label in class_counts:
                 if class_counts[class_label] < max_class_count:
                     class_samples = X_current[y_current == class_label]
-                    if len(class_samples) < 2:  # Need at least 2 samples for SMOTE
+                    if len(class_samples) < 2:
                         continue
 
                     n_samples_needed = max_class_count - len(class_samples)
@@ -97,7 +133,6 @@ class STEMBalancer:
                     nn = NearestNeighbors(n_neighbors=min(self.k_neighbors, len(class_samples)))
                     nn.fit(class_samples)
 
-                    # Generate synthetic samples
                     for _ in range(n_samples_needed):
                         idx = np.random.randint(0, len(class_samples))
                         sample = class_samples[idx]
@@ -120,7 +155,7 @@ class STEMBalancer:
             X_current = np.vstack([X_current] + X_new)
             y_current = np.append(y_current, y_new)
 
-            # ENN part
+            # ENN: Remove ambiguous samples
             nn = NearestNeighbors(n_neighbors=4)
             nn.fit(X_current)
             distances, indices = nn.kneighbors(X_current)
@@ -147,7 +182,6 @@ class STEMBalancer:
 
             prev_total_samples = current_total
 
-            # Check if target ratio is achieved
             current_ratio = self.calculate_imbalance_ratio(y_current)
             if current_ratio >= self.target_ratio:
                 print(f"Target ratio {self.target_ratio} achieved. Current ratio: {current_ratio:.3f}")
@@ -156,7 +190,17 @@ class STEMBalancer:
         return X_current, y_current
 
     def apply_mixup(self, X, y):
-        """Apply Mixup augmentation"""
+        """
+        Apply Mixup augmentation to expand the dataset.
+
+        Parameters:
+        - X (np.ndarray): Input features.
+        - y (np.ndarray): Class labels.
+
+        Returns:
+        - X_mixed (np.ndarray): Augmented feature matrix.
+        - y_mixed (np.ndarray): Augmented labels.
+        """
         print("\nApplying Mixup augmentation...")
         X_mixed, y_mixed = X.copy(), y.copy()
 
@@ -177,25 +221,27 @@ class STEMBalancer:
         return X_mixed, y_mixed
 
     def save_balanced_data(self, X, y, output_path, stage="final"):
-        """Save balanced data to folders"""
+        """
+        Save balanced images to class-wise folders.
+
+        Parameters:
+        - X (np.ndarray): Balanced image data.
+        - y (np.ndarray): Corresponding labels.
+        - output_path (str): Directory to save the balanced dataset.
+        - stage (str): Label for the augmentation stage (e.g., "smote_enn", "final").
+        """
         os.makedirs(output_path, exist_ok=True)
 
-        # Create folders for each class
         unique_classes = np.unique(y)
         for class_label in unique_classes:
             class_folder = os.path.join(output_path, f"class_{class_label}")
             os.makedirs(class_folder, exist_ok=True)
 
-            # Get indices for current class
             class_indices = np.where(y == class_label)[0]
 
-            # Save images for current class
             for idx, sample_idx in enumerate(class_indices):
-                # Reshape flattened array back to image
                 img = X[sample_idx].reshape(self.image_size)
-                # Convert back to uint8 format (0-255)
                 img = (img * 255).astype(np.uint8)
-                # Save image
                 img_path = os.path.join(class_folder, f"{stage}_sample_{idx}.png")
                 cv2.imwrite(img_path, img)
 
@@ -203,29 +249,34 @@ class STEMBalancer:
         print(f"Class distribution in saved data: {Counter(y)}")
 
     def fit_resample(self, base_path, output_base_path="balanced_output"):
-        """Main method to apply the complete STEM algorithm with saving intermediate results"""
-        # Load data
+        """
+        Apply the complete STEM process: load, balance (SMOTE-ENN + Mixup), and save.
+
+        Parameters:
+        - base_path (str): Input directory containing class-wise folders.
+        - output_base_path (str): Directory name for saving outputs.
+
+        Returns:
+        - X_final (np.ndarray): Final balanced features.
+        - y_final (np.ndarray): Final balanced labels.
+        """
         X, y = self.load_data_from_folders(base_path)
         print("\nInitial class distribution:", Counter(y))
         print(f"Initial imbalance ratio: {self.calculate_imbalance_ratio(y):.3f}")
         print("Initial dataset size:", len(X))
 
-        # Create output directories
         output_base_path = os.path.join(base_path, output_base_path)
         smote_enn_path = os.path.join(output_base_path, "after_smote_enn")
         final_path = os.path.join(output_base_path, "final_balanced")
 
-        # Apply SMOTE-ENN
         print("\nApplying SMOTE-ENN...")
         X_balanced, y_balanced = self.apply_smote_enn(X, y)
         self.save_balanced_data(X_balanced, y_balanced, smote_enn_path, "smote_enn")
 
-        # Apply Mixup
         print("\nApplying Mixup...")
         X_final, y_final = self.apply_mixup(X_balanced, y_balanced)
         self.save_balanced_data(X_final, y_final, final_path, "final")
 
-        # Save summary statistics
         with open(os.path.join(output_base_path, "balance_summary.txt"), "w") as f:
             f.write("STEM Balancing Summary\n")
             f.write("=====================\n\n")
@@ -237,8 +288,9 @@ class STEMBalancer:
 
         return X_final, y_final
 
+
 if __name__ == "__main__":
-    # Initialize the balancer
+    # Initialize the balancer with desired parameters
     balancer = STEMBalancer(
         target_ratio=0.7,
         k_neighbors=4,
@@ -247,11 +299,11 @@ if __name__ == "__main__":
         image_size=(256,256)
     )
 
-    # Specify your data folder path
+    # Path to dataset
     data_folder = r"/content/drive/MyDrive/Thyroid_Spect_minor /DU_original"
 
     try:
-        # Apply STEM balancing
+        # Perform dataset balancing using STEM
         X_balanced, y_balanced = balancer.fit_resample(data_folder)
         print("Successfully completed STEM balancing")
     except Exception as e:
