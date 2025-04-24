@@ -13,17 +13,18 @@ Minor_codebase/
 ```
 ---
 
-### 🔬 `notebooks/`
+### 📘 `notebooks/`
 This folder contains interactive Jupyter notebooks used during the experimentation and development phase. Each notebook corresponds to different model architectures or augmentation strategies, and can be run step-by-step for reproducibility and analysis.
 
 ### ⚙️ `scripts/`
 This folder holds Python scripts (.py files) that modularize the models and their training logic. These scripts are meant for direct execution and integration into larger pipelines.
 
-### 🧪 `augmentation/`
+###  `augmentation/`
 All the augmentation techniques explored in this project are present here. It includes:
 - Basic image augmentation
-- Synthetic data generation using SMOTE
+- Synthetic data generation using STEM
 - GAN-based data augmentation
+- Diffusion based data augmentation
   
 NOTE: Basic augmentation is present in ```Data_loader.py```, located at ```/scripts/utils```
 
