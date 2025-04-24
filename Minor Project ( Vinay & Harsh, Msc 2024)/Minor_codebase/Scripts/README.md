@@ -1,4 +1,4 @@
-# Thyroid Classification - Training Pipeline
+# Thyroid Classification - Training Scripts
 
 This folder contains the training scripts for our **Thyroid Disease Classification** project (Minor Project, MSc 2024). The core training logic resides in `train.py`, but several other files must be executed or imported prior to running it for the training process to function correctly.
 
