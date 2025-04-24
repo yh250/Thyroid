@@ -13,7 +13,7 @@ A deep learning-based diagnostic approach for hyperthyroidism using SPECT scans.
 This project tackles class imbalance in small-scale medical datasets using traditional methods, hybrid augmentation (**STEM**: SMOTE + ENN + MixUp), GANs, and diffusion-based techniques.  
 All methods were evaluated across multiple models (CNN, AlexNet, MobileNetV2, ResNet50V2) using metrics like ROC-AUC, Precision, F1-score, and more.
 
---
+
 ### [2. Major Project Harsh Yadav][2]
  *Major Project Submission by Harsh Yadav (M.Sc. 2025)*
 
