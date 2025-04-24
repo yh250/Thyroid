@@ -1,6 +1,6 @@
 # Thyroid
 
-This repository is a compilation of project work related to thyroid-related diseases, undertaken under the guidance of **Dr. Reena Kasana** in the **Department of Computer Science, University of Delhi**.
+This repository is a compilation of project work related to thyroid-related diseases, carried out during the MSc Computer Science program at the University of Delhi.
 
 ---
 
